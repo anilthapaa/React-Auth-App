@@ -8,7 +8,5 @@ This is a simple full-stack web application with:
 
 - User Registration
 - User Login
-- View User Info (from database)
+- Displays Weather Predition as according to City and Date.
 - Passwords are hashed using bcrypt
-
-App runs at: http://localhost:3000
