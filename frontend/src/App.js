@@ -5,7 +5,7 @@ import Register from './components/Register';
 import WeatherApp from './components/WeatherApp';
 
 const App = () => (
-  <Router>
+  <Router basename="/">
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/register" element={<Register />} />
