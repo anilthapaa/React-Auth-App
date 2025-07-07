@@ -10,7 +10,6 @@ function WeatherApp() {
   const [loading, setLoading] = useState(false)
   const [showCelsius, setShowCelsius] = useState(false)
   const [user, setUser] = useState(null)
-  const navigate = useNavigate()
 
   const API_KEY = '8c8530f0f5f0040c40f60275a4355cd1'
 
