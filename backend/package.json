@@ -4,6 +4,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
+    "lint": "eslint . --ext .js"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
