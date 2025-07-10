@@ -12,6 +12,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build"
+    "lint": "eslint . --ext .js"
   },
   "browserslist": {
     "production": [
