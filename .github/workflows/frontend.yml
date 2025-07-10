@@ -24,6 +24,14 @@ jobs:
         with:
           node-version: 18
 
+      - name: Cache Node Modules
+        uses: actions/cache@v4
+        with:
+          path: frontend/node_modules
+          key: frontend-modules-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: |
+            frontend-modules-
+
       - name: Install Dependencies
         run: npm install
 
