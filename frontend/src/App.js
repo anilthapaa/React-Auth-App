@@ -1,8 +1,8 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Login from './components/Login';
-import Register from './components/Register';
-import WeatherApp from './components/WeatherApp';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import Login from "./components/Login";
+import Register from "./components/Register";
+import WeatherApp from "./components/WeatherApp";
 
 const App = () => (
     <Routes>

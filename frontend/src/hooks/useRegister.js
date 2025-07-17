@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 export const useRegister = () => {
   const [loading, setLoading] = useState(false);
@@ -8,13 +8,13 @@ export const useRegister = () => {
     setLoading(true);
     try {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/api/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form)
       });
   if (!res.ok) {
   const msg = await res.json();
-  throw new Error(msg.error || 'Registration failed');
+  throw new Error(msg.error || "Registration failed");
 }
       return await res.json();
     } catch (err) {

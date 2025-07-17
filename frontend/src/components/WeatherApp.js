@@ -1,92 +1,91 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import React, { useState } from "react";
+import axios from "axios";
 
 function WeatherApp() {
-  const [data, setData] = useState({})
-  const [location, setLocation] = useState('')
-  const [date, setDate] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [showCelsius, setShowCelsius] = useState(false)
-  const [user, setUser] = useState(null)
+  const [data, setData] = useState({});
+  const [location, setLocation] = useState("");
+  const [date, setDate] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showCelsius, setShowCelsius] = useState(false);
  
   
-  const API_KEY = '8c8530f0f5f0040c40f60275a4355cd1'
+  const API_KEY = "8c8530f0f5f0040c40f60275a4355cd1";
 
 
   const handleSearch = async () => {
-    setError('')
-    setData({})
+    setError("");
+    setData({});
     if (!location || !date) {
-      setError('Please enter both location and date.')
-      return
+      setError("Please enter both location and date.");
+      return;
     }
-    setLoading(true)
-    const today = new Date()
-    const selectedDate = new Date(date)
-    today.setHours(0,0,0,0)
-    selectedDate.setHours(0,0,0,0)
-    const diffDays = Math.floor((selectedDate - today) / (1000 * 60 * 60 * 24))
+    setLoading(true);
+    const today = new Date();
+    const selectedDate = new Date(date);
+    today.setHours(0,0,0,0);
+    selectedDate.setHours(0,0,0,0);
+    const diffDays = Math.floor((selectedDate - today) / (1000 * 60 * 60 * 24));
 
     if (diffDays < 0) {
-      setError('Sorry, past weather data is not available for free.')
-      setLoading(false)
-      return
+      setError("Sorry, past weather data is not available for free.");
+      setLoading(false);
+      return;
     } else if (diffDays === 0) {
       // Current weather
-      const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=imperial&appid=${API_KEY}`
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=imperial&appid=${API_KEY}`;
       try {
-        const response = await axios.get(url)
-        setData(response.data)
+        const response = await axios.get(url);
+        setData(response.data);
       } catch (e) {
-        setError('Could not fetch current weather.')
+        setError("Could not fetch current weather.");
       }
     } else if (diffDays > 0 && diffDays < 6) {
       // Forecast (5 days ahead)
-      const url = `https://api.openweathermap.org/data/2.5/forecast?q=${location}&units=imperial&appid=${API_KEY}`
+      const url = `https://api.openweathermap.org/data/2.5/forecast?q=${location}&units=imperial&appid=${API_KEY}`;
       try {
-        const response = await axios.get(url)
-        const target = new Date(date + "T12:00:00")
+        const response = await axios.get(url);
+        const target = new Date(date + "T12:00:00");
         const item = response.data.list.find(item => {
-          const itemDate = new Date(item.dt_txt)
+          const itemDate = new Date(item.dt_txt);
           return (
             itemDate.getUTCFullYear() === target.getUTCFullYear() &&
             itemDate.getUTCMonth() === target.getUTCMonth() &&
             itemDate.getUTCDate() === target.getUTCDate() &&
             itemDate.getUTCHours() === target.getUTCHours()
-          )
-        })
+          );
+        });
         if (item) {
-          setData({ ...item.main, weather: [item.weather[0]], name: location, wind: item.wind })
+          setData({ ...item.main, weather: [item.weather[0]], name: location, wind: item.wind });
         } else {
-          setError('No forecast available for that date/time.')
+          setError("No forecast available for that date/time.");
         }
       } catch (e) {
-        setError('Could not fetch forecast.')
+        setError("Could not fetch forecast.");
       }
     } else {
-      setError('Free API only allows forecast up to 5 days ahead.')
+      setError("Free API only allows forecast up to 5 days ahead.");
     }
-    setLoading(false)
-    setLocation('')
-    setDate('')
-  }
+    setLoading(false);
+    setLocation("");
+    setDate("");
+  };
 
   // Helper for weather icon
   const getWeatherIcon = () => {
     if (data.weather && data.weather[0] && data.weather[0].icon) {
-      return `https://openweathermap.org/img/wn/${data.weather[0].icon}@4x.png`
+      return `https://openweathermap.org/img/wn/${data.weather[0].icon}@4x.png`;
     }
-    return null
-  }
+    return null;
+  };
 
   // Convert Fahrenheit to Celsius
-  const f2c = (f) => ((f - 32) * 5 / 9)
+  const f2c = (f) => ((f - 32) * 5 / 9);
   // Get temp in F or C depending on showCelsius
   const displayTemp = (f) => {
-    if (showCelsius) return `${Math.round(f2c(f))}°C`
-    return `${Math.round(f)}°F`
-  }
+    if (showCelsius) return `${Math.round(f2c(f))}°C`;
+    return `${Math.round(f)}°F`;
+  };
 
   return (
     <div className="sunset-bg">
@@ -109,20 +108,20 @@ function WeatherApp() {
             className="input"
           />
           <button onClick={handleSearch} className="button" disabled={loading}>
-            {loading ? 'Loading...' : 'Get Weather'}
+            {loading ? "Loading..." : "Get Weather"}
           </button>
         </div>
-        <div style={{textAlign:'center', marginTop:'4px'}}>
+        <div style={{textAlign:"center", marginTop:"4px"}}>
           <button
             className="unit-toggle"
             onClick={() => setShowCelsius(v => !v)}
             style={{
               background: showCelsius
-                ? 'linear-gradient(90deg, #2193b0 0%, #6dd5ed 100%)'
-                : 'linear-gradient(90deg, #fc4a1a 0%, #f7b733 100%)'
+                ? "linear-gradient(90deg, #2193b0 0%, #6dd5ed 100%)"
+                : "linear-gradient(90deg, #fc4a1a 0%, #f7b733 100%)"
             }}
           >
-            {showCelsius ? 'Show °F' : 'Show °C'}
+            {showCelsius ? "Show °F" : "Show °C"}
           </button>
         </div>
         {error && <div className="error-message">{error}</div>}
@@ -135,9 +134,9 @@ function WeatherApp() {
                   <h3>{data.name}</h3>
                 </div>
                 <div className="temp">
-                  {typeof data.temp !== 'undefined' ? (
+                  {typeof data.temp !== "undefined" ? (
                     <h1>{displayTemp(data.temp)}</h1>
-                  ) : data.main && typeof data.main.temp !== 'undefined' ? (
+                  ) : data.main && typeof data.main.temp !== "undefined" ? (
                     <h1>{displayTemp(data.main.temp)}</h1>
                   ) : null}
                 </div>
@@ -155,23 +154,23 @@ function WeatherApp() {
               <div className="weather-bottom">
                 <div className="weather-info">
                   <span className="label">Feels Like</span>
-                  {typeof data.feels_like !== 'undefined' ? (
+                  {typeof data.feels_like !== "undefined" ? (
                     <span className="value">{displayTemp(data.feels_like)}</span>
-                  ) : data.main && typeof data.main.feels_like !== 'undefined' ? (
+                  ) : data.main && typeof data.main.feels_like !== "undefined" ? (
                     <span className="value">{displayTemp(data.main.feels_like)}</span>
                   ) : null}
                 </div>
                 <div className="weather-info">
                   <span className="label">Humidity</span>
-                  {typeof data.humidity !== 'undefined' ? (
+                  {typeof data.humidity !== "undefined" ? (
                     <span className="value">{data.humidity}%</span>
-                  ) : data.main && typeof data.main.humidity !== 'undefined' ? (
+                  ) : data.main && typeof data.main.humidity !== "undefined" ? (
                     <span className="value">{data.main.humidity}%</span>
                   ) : null}
                 </div>
                 <div className="weather-info">
                   <span className="label">Wind Speed</span>
-                  {data.wind && typeof data.wind.speed !== 'undefined' ? (
+                  {data.wind && typeof data.wind.speed !== "undefined" ? (
                     <span className="value">{Math.round(data.wind.speed)} MPH</span>
                   ) : null}
                 </div>
@@ -332,7 +331,7 @@ function WeatherApp() {
         }
       `}</style>
     </div>
-  )
+  );
 }
 
-export default WeatherApp
+export default WeatherApp;

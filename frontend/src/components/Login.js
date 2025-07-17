@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useLogin } from '../hooks/useLogin';
-import { useAuth } from '../context/AuthContext';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useLogin } from "../hooks/useLogin";
+import { useAuth } from "../context/AuthContext";
 
 const weatherBg =
   "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=1500&q=80";
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const { login, loading, error } = useLogin();
   const { setUser } = useAuth();
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ const Login = () => {
     const data = await login(username, password);
     if (data) {
       setUser(data.user);
-      navigate('/weather'); // Redirect to weather app on successful login
+      navigate("/weather"); // Redirect to weather app on successful login
     }
   };
 
@@ -54,7 +54,7 @@ const Login = () => {
           required
         />
         <button className="login-btn" type="submit" disabled={loading}>
-          {loading ? 'Logging in...' : 'Login'}
+          {loading ? "Logging in..." : "Login"}
         </button>
         {error && <p className="login-error">{error}</p>}
         <div style={{marginTop: "1.2rem", textAlign: "center"}}>

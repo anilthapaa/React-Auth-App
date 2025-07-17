@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useRegister } from '../hooks/useRegister';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useRegister } from "../hooks/useRegister";
 
 const weatherBg =
   "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80";
 
 const Register = () => {
-  const [form, setForm] = useState({ id: '', username: '', password: '', email: '' });
+  const [form, setForm] = useState({ id: "", username: "", password: "", email: "" });
   const { register, loading, error } = useRegister();
   const navigate = useNavigate();
 
@@ -15,7 +15,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const res = await register(form);
-    if (res) navigate('/');
+    if (res) navigate("/");
   };
 
   return (
@@ -64,7 +64,7 @@ const Register = () => {
           required
         />
         <button className="register-btn" type="submit" disabled={loading}>
-          {loading ? 'Registering...' : 'Register'}
+          {loading ? "Registering..." : "Register"}
         </button>
         {error && <p className="register-error">{error}</p>}
         <div style={{ marginTop: "1.1rem", textAlign: "center" }}>

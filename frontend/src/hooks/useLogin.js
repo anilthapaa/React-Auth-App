@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 export const useLogin = () => {
   const [loading, setLoading] = useState(false);
@@ -8,11 +8,11 @@ export const useLogin = () => {
     setLoading(true);
     try {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/api/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password })
       });
-      if (!res.ok) throw new Error('Invalid credentials');
+      if (!res.ok) throw new Error("Invalid credentials");
       return await res.json();
     } catch (err) {
       setError(err.message);
