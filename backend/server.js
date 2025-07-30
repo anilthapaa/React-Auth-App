@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
-const db = require('./db');
+const db = require('./db'); // make sure db is promise-based
 require('dotenv').config();
 
 const app = express();
@@ -11,9 +11,15 @@ app.use(express.json());
 app.post('/api/register', async (req, res) => {
   const { id, username, password, email } = req.body;
 
+  if (!id || !username || !password || !email) {
+    return res.status(400).json({ error: 'All fields (id, username, password, email) are required' });
+  }
+
   try {
     const [existing] = await db.query('SELECT id FROM userdata WHERE username = ?', [username]);
-    if (existing.length > 0) return res.status(400).json({ error: 'Username already exists' });
+    if (existing.length > 0) {
+      return res.status(400).json({ error: 'Username already exists' });
+    }
 
     const passwordHash = await bcrypt.hash(password, 10);
     await db.query(
@@ -23,17 +29,27 @@ app.post('/api/register', async (req, res) => {
 
     res.json({ success: true });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
 
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Username and password are required' });
+  }
+
   try {
     const [rows] = await db.query('SELECT * FROM userdata WHERE username = ?', [username]);
     const user = rows[0];
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
@@ -45,13 +61,17 @@ app.post('/api/login', async (req, res) => {
       }
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
 app.get('/api/user', async (req, res) => {
   try {
     const [rows] = await db.query('SELECT * FROM userdata LIMIT 1');
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'No user found' });
+    }
     const user = rows[0];
     res.json({
       id: user.id,
@@ -59,7 +79,8 @@ app.get('/api/user', async (req, res) => {
       email: user.email,
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
   }
 });
 

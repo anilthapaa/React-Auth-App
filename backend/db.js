@@ -1,11 +1,11 @@
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 const fs = require('fs');
 require('dotenv').config();
 
 const db = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
-  password: process.env.DB_PASS,
+  password: process.env.DB_PASS,    
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
   ssl: {
@@ -16,12 +16,14 @@ const db = mysql.createPool({
   queueLimit: 0
 });
 
-db.getConnection((err, _connection) => {
-  if (err) {
+db.getConnection()
+  .then((connection) => {
+    console.log('✅ Connected to MySQL Azure database!');
+    connection.release();
+  })
+  .catch((err) => {
     console.error('❌ Error connecting to MySQL: ', err);
     return;
-  }
-  console.log('✅Connected to MySQL Azure database!');
-});
+  });
 
 module.exports = db;
