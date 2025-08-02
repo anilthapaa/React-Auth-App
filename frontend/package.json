@@ -7,20 +7,18 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.3",
-    "react-scripts": "^5.0.1",
-    "dotenv": "^16.4.5"
+    "react-scripts": "^5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest",
-    "inject": "node scripts/inject-api-key.js"
+    "test": "jest"
   },
   "jest": {
-    "transformIgnorePatterns": [
-      "/node_modules/(?!(axios)/)"
-    ]
-  },
+  "transformIgnorePatterns": [
+    "/node_modules/(?!(axios)/)"
+  ]
+},
   "devDependencies": {
     "@testing-library/react": "^14.0.0",
     "@testing-library/jest-dom": "^6.0.0",
