@@ -1,8 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
-const db = require('./db'); // make sure db is promise-based
 require('dotenv').config();
+const mongoose = require('./db'); // MongoDB connection
+const User = require('./models/User'); // Mongoose model
 
 const app = express();
 app.use(cors());
@@ -16,16 +17,14 @@ app.post('/api/register', async (req, res) => {
   }
 
   try {
-    const [existing] = await db.query('SELECT id FROM userdata WHERE username = ?', [username]);
-    if (existing.length > 0) {
+    const existing = await User.findOne({ username });
+    if (existing) {
       return res.status(400).json({ error: 'Username already exists' });
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
-    await db.query(
-      'INSERT INTO userdata (id, username, password, email) VALUES (?, ?, ?, ?)',
-      [id, username, passwordHash, email]
-    );
+    const user = new User({ id, username, password: passwordHash, email });
+    await user.save();
 
     res.json({ success: true });
   } catch (err) {
@@ -42,8 +41,7 @@ app.post('/api/login', async (req, res) => {
   }
 
   try {
-    const [rows] = await db.query('SELECT * FROM userdata WHERE username = ?', [username]);
-    const user = rows[0];
+    const user = await User.findOne({ username });
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
@@ -68,11 +66,10 @@ app.post('/api/login', async (req, res) => {
 
 app.get('/api/user', async (req, res) => {
   try {
-    const [rows] = await db.query('SELECT * FROM userdata LIMIT 1');
-    if (rows.length === 0) {
+    const user = await User.findOne();
+    if (!user) {
       return res.status(404).json({ error: 'No user found' });
     }
-    const user = rows[0];
     res.json({
       id: user.id,
       username: user.username,
@@ -89,3 +86,5 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`✅ Backend running on http://localhost:${PORT}`);
 });
+
+// Express Server and API Routes

@@ -1,29 +1,22 @@
-const mysql = require('mysql2/promise');
-const fs = require('fs');
+const mongoose = require('mongoose');
 require('dotenv').config();
 
-const db = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,    
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT,
-  ssl: {
-    ca: fs.readFileSync(__dirname + '/DigiCertGlobalRootCA.crt.pem') 
-  },
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
+const mongoUri = process.env.MONGO_LOCAL_URI || 'mongodb://localhost:27017/react_auth_db';
+
+mongoose.connect(mongoUri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  // Uncomment below if using SSL with MongoDB Atlas or similar
+  // ssl: true,
+  // sslCA: fs.readFileSync(__dirname + '/DigiCertGlobalRootCA.crt.pem')
+})
+.then(() => {
+  console.log('✅ Connected to MongoDB database!');
+})
+.catch((err) => {
+  console.error('❌ Error connecting to MongoDB: ', err);
 });
 
-db.getConnection()
-  .then((connection) => {
-    console.log('✅ Connected to MySQL Azure database!');
-    connection.release();
-  })
-  .catch((err) => {
-    console.error('❌ Error connecting to MySQL: ', err);
-    return;
-  });
+module.exports = mongoose;
 
-module.exports = db;
+// This is the mongo DB connection logic

@@ -2,7 +2,7 @@ This is a simple full-stack web application with:
 
 - ✅ Frontend: React
 - ✅ Backend: Node.js with Express
-- ✅ Database: MySQL
+- ✅ Database: MongoDB
 
 ### 💡 Features
 
