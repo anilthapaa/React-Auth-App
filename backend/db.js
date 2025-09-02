@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const mongoUri = process.env.MONGO_LOCAL_URI || 'mongodb://localhost:27017/react_auth_db';
+const mongoUri = process.env.MONGO_ATLAS_URI;
 
 mongoose.connect(mongoUri, {
   useNewUrlParser: true,
